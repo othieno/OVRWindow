@@ -1,0 +1,5 @@
+# Ignore prototypes and auto-generated files.
+*.pro.user
+prototype
+Makefile
+build
