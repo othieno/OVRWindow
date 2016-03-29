@@ -156,7 +156,8 @@ OVRWindow::getGL()
 void
 OVRWindow::makeCurrent()
 {
-   assert(_gl.makeCurrent(this));
+   const auto& result = _gl.makeCurrent(this);
+   assert(result);
 }
 
 
@@ -714,8 +715,10 @@ OVRWindow::sanitizeDeviceConfiguration()
    {
       // If no sensor capability is activated, stop the sensor.
       const auto& sensorCaps = getSensorCaps();
-      if (sensorCaps)
-         assert(ovrHmd_StartSensor(hmd, _device.SensorCaps, sensorCaps));
+      if (sensorCaps) {
+         const auto result = ovrHmd_StartSensor(hmd, _device.SensorCaps, sensorCaps);
+         assert(result);
+      }
       else
          ovrHmd_StopSensor(hmd);
 
@@ -747,7 +750,8 @@ OVRWindow::sanitizeRenderingConfiguration()
    const auto& hmd = _device.Handle;
    if (_dirty.rendering)
    {
-      assert(ovrHmd_ConfigureRendering(hmd, &getOvrGlConfig().Config, getDistortionCaps(), _FOV, _renderInfo));
+      const auto result = ovrHmd_ConfigureRendering(hmd, &getOvrGlConfig().Config, getDistortionCaps(), _FOV, _renderInfo);
+      assert(result);
       if (_forceZeroIPD)
       {
          for (auto& info : _renderInfo)
@@ -814,7 +818,8 @@ OVRWindow::exposeEvent(QExposeEvent* const e)
    if (!isInitialized && isExposed())
    {
       _gl.setFormat(requestedFormat());
-      assert(_gl.create());
+      auto result = _gl.create();
+      assert(result);
       makeCurrent();
       assert(hasValidGL());
       initializeOpenGLFunctions();
