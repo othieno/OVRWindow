@@ -855,11 +855,11 @@ OVRWindow::getFrameRenderContext(const ovrEyeType& eye, const ovrPosef& pose)
    const auto& viewAdjust = renderInfo.ViewAdjust;
 
    // Calculate the view matrix.
-   const auto* V = &
-   (
-      OVR::Matrix4f::Translation(viewAdjust) *
-      OVR::Matrix4f(OVR::Quatf(pose.Orientation).Inverted())
-   ).M[0][0];
+   const auto& viewMatrix = (
+               OVR::Matrix4f::Translation(viewAdjust) *
+               OVR::Matrix4f(OVR::Quatf(pose.Orientation).Inverted())
+               );
+   const auto* V = &viewMatrix.M[0][0];
    for (unsigned int i = 0; i < 4; ++i)
    {
       auto& view = frameRenderContext.view;
