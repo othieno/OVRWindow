@@ -56,9 +56,12 @@ getXDisplay(QWindow* const window) {
 #endif
 
 
-// This is a required function definition for QSet<OVRWindow::Feature> to be used.
+/**
+ * Returns the specified OVRWindow::Feature's hash value, as required by QSet.
+ * @param feature the feature identifier to hash.
+ */
 uint qHash(const OVRWindow::Feature& feature) {
-    // Make sure OVRWindow::Feature's underlying type is an unsigned integer.
+    // Make sure OVRWindow::Feature's underlying type is an unsigned integer, making hashing trivial.
     assert((std::is_same<uint, std::underlying_type<OVRWindow::Feature>::type>::value));
     return static_cast<uint>(feature);
 }
