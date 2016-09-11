@@ -19,7 +19,7 @@ display device (required by the Oculus SDK). The current solution is to use a pa
 Platform Abstraction][qpa] (QPA) that is strongly-coupled to the version of Qt it was built against.
 Consequently, this is not a portable solution but will very likely become one as the QPA API matures.
 
-The final requirement is a C++ compiler that implements the C++11 standard, at least.
+The final requirement is a C++ compiler that implements the C++14 standard, at least.
 
 
 Installation

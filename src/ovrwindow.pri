@@ -12,8 +12,8 @@ LIBOVR = $$OVRSDK/LibOVR
 # Use gui-private to gain access to the platform's native interface.
 QT += gui-private
 
-# Add C++11 support.
-CONFIG += c++11
+# Add modern C++ support.
+CONFIG += c++14
 
 # Common build configuration.
 INCLUDEPATH += $$LIBOVR/Include $$LIBOVR/Src
