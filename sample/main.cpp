@@ -29,7 +29,7 @@
 class SpinningCubeWindow : public OVRWindow {
 public:
     void initializeGL() override final;
-    void paintGL(const OVRWindow::FrameRenderContext&, const float&) override final;
+    void paintGL(const OVRWindow::FrameRenderContext&, const float) override final;
 private:
     GLfloat _angle;
 };
@@ -78,7 +78,7 @@ SpinningCubeWindow::initializeGL() {
 
 
 void
-SpinningCubeWindow::paintGL(const OVRWindow::FrameRenderContext& context, const float& dt) {
+SpinningCubeWindow::paintGL(const OVRWindow::FrameRenderContext& context, const float dt) {
     _angle = static_cast<GLfloat>(std::fmod(_angle + (dt * 5.0), 360.0));
 
     glMatrixMode(GL_PROJECTION);

@@ -60,14 +60,15 @@ getXDisplay(QWindow* const window) {
  * Returns the specified OVRWindow::Feature's hash value, as required by QSet.
  * @param feature the feature identifier to hash.
  */
-uint qHash(const OVRWindow::Feature& feature) {
+uint
+qHash(const OVRWindow::Feature feature) {
     // Make sure OVRWindow::Feature's underlying type is an unsigned integer, making hashing trivial.
     assert((std::is_same<uint, std::underlying_type<OVRWindow::Feature>::type>::value));
     return static_cast<uint>(feature);
 }
 
 
-OVRWindow::OVRWindow(const unsigned int& index, const std::initializer_list<OVRWindow::Feature>& features) :
+OVRWindow::OVRWindow(const unsigned int index, const std::initializer_list<OVRWindow::Feature>& features) :
 QWindow(static_cast<QScreen*>(nullptr)),
 _device(),
 _enableDynamicLOD(false),
@@ -143,11 +144,11 @@ OVRWindow::initializeGL() {}
 
 
 void
-OVRWindow::resizeGL(const unsigned int&, const unsigned int&) {}
+OVRWindow::resizeGL(const unsigned int, const unsigned int) {}
 
 
 void
-OVRWindow::paintGL(const OVRWindow::FrameRenderContext&, const float&) {}
+OVRWindow::paintGL(const OVRWindow::FrameRenderContext&, const float) {}
 
 
 bool
@@ -188,7 +189,7 @@ OVRWindow::getEnabledFeatures() const {
 
 
 void
-OVRWindow::enableFeature(const OVRWindow::Feature& feature, const bool enable) {
+OVRWindow::enableFeature(const OVRWindow::Feature feature, const bool enable) {
     // If the feature is already enabled and a request to enable it is made, then the
     // request is ignored. Likewise, if a feature is disabled and a request to disable
     // it is made, then the request is ignored. If a feature is enabled or disabled,
@@ -235,13 +236,13 @@ OVRWindow::enableFeatures(const std::initializer_list<OVRWindow::Feature>& featu
 
 
 bool
-OVRWindow::isFeatureEnabled(const OVRWindow::Feature& feature) const {
+OVRWindow::isFeatureEnabled(const OVRWindow::Feature feature) const {
     return _enabledFeatures.contains(feature);
 }
 
 
 bool
-OVRWindow::isFeatureSupported(const OVRWindow::Feature& feature) const {
+OVRWindow::isFeatureSupported(const OVRWindow::Feature feature) const {
     const auto& mask = static_cast<std::underlying_type<OVRWindow::Feature>::type>(feature);
     switch (feature) {
         // These features are not supported on all revisions of the Rift HMD.
@@ -254,14 +255,14 @@ OVRWindow::isFeatureSupported(const OVRWindow::Feature& feature) const {
 }
 
 
-const OVRWindow::Vision&
+OVRWindow::Vision
 OVRWindow::getVision() const {
     return _vision;
 }
 
 
 void
-OVRWindow::setVision(const OVRWindow::Vision& vision) {
+OVRWindow::setVision(const OVRWindow::Vision vision) {
     if (_vision != vision) {
         _vision = vision;
         _dirty.rendering = true;
@@ -275,14 +276,14 @@ OVRWindow::toggleVision() {
 }
 
 
-const OVRWindow::LOD&
+OVRWindow::LOD
 OVRWindow::getLOD() const {
     return _LOD;
 }
 
 
 void
-OVRWindow::setLOD(const OVRWindow::LOD& lod) {
+OVRWindow::setLOD(const OVRWindow::LOD lod) {
     if (_LOD != lod) {
         _LOD = lod;
         changeLOD(_LOD);
@@ -292,7 +293,7 @@ OVRWindow::setLOD(const OVRWindow::LOD& lod) {
 
 
 void
-OVRWindow::changeLOD(const OVRWindow::LOD& lod) {
+OVRWindow::changeLOD(const OVRWindow::LOD lod) {
     // Reset enabled features.
     _enabledFeatures.clear();
 
@@ -362,14 +363,14 @@ OVRWindow::getIPD() const {
 
 
 void
-OVRWindow::setIPD(const float& ipd) {
+OVRWindow::setIPD(const float ipd) {
     // If the IPD is changed, then the render configuration needs to be updated.
     _dirty.rendering = ovrHmd_SetFloat(_device.Handle, OVR_KEY_IPD, ipd);
 }
 
 
 void
-OVRWindow::forceZeroIPD(const bool& force) {
+OVRWindow::forceZeroIPD(const bool force) {
     // If the IPD is changed, then the render configuration needs to be updated.
     if (_forceZeroIPD != force) {
         _forceZeroIPD = force;
@@ -378,14 +379,14 @@ OVRWindow::forceZeroIPD(const bool& force) {
 }
 
 
-const float&
+float
 OVRWindow::getPixelDensity() const {
     return _pixelDensity;
 }
 
 
 void
-OVRWindow::setPixelDensity(const float& density) {
+OVRWindow::setPixelDensity(const float density) {
     // When the pixel density is changed, the render target needs to be resized.
     if (_pixelDensity != density) {
         _pixelDensity = density <= 0.0f ? 0.5f : density;
@@ -394,14 +395,14 @@ OVRWindow::setPixelDensity(const float& density) {
 }
 
 
-const float&
+float
 OVRWindow::getNearClippingDistance() const {
     return _nearClippingPlaneDistance;
 }
 
 
 void
-OVRWindow::setNearClippingDistance(const float& near) {
+OVRWindow::setNearClippingDistance(const float near) {
     if (_nearClippingPlaneDistance != near) {
         _nearClippingPlaneDistance = near;
         for (auto& dirty : _dirty.projections) {
@@ -411,14 +412,14 @@ OVRWindow::setNearClippingDistance(const float& near) {
 }
 
 
-const float&
+float
 OVRWindow::getFarClippingDistance() const {
     return _farClippingPlaneDistance;
 }
 
 
 void
-OVRWindow::setFarClippingDistance(const float& far) {
+OVRWindow::setFarClippingDistance(const float far) {
     if (_farClippingPlaneDistance != far) {
         _farClippingPlaneDistance = far;
         for (auto& dirty : _dirty.projections) {
@@ -538,7 +539,7 @@ OVRWindow::getOvrGlConfig() const {
 
 
 ovrGLTexture&
-OVRWindow::getOvrGlTexture(const ovrEyeType& eye) const {
+OVRWindow::getOvrGlTexture(const ovrEyeType eye) const {
     static std::array<ovrGLTexture, ovrEye_Count> INSTANCES;
     return INSTANCES[eye];
 }
@@ -712,7 +713,7 @@ OVRWindow::sanitizeRenderingConfiguration() {
 
 
 void
-OVRWindow::adjustLOD(const float& dt, const unsigned int& tolerance) {
+OVRWindow::adjustLOD(const float dt, const unsigned int tolerance) {
     static const QMap<ovrHmdType, unsigned int> REFRESH_RATES = {
         {ovrHmd_DK1, 60},
         {ovrHmd_DK2, 75}
@@ -788,7 +789,7 @@ OVRWindow::event(QEvent* const e)
 
 
 const OVRWindow::FrameRenderContext&
-OVRWindow::getFrameRenderContext(const ovrEyeType& eye, const ovrPosef& pose) {
+OVRWindow::getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose) {
     auto& frameRenderContext = _frameRenderContext[eye];
     const auto& renderInfo = _renderInfo[eye];
     const auto& viewAdjust = renderInfo.ViewAdjust;

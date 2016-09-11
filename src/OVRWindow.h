@@ -119,7 +119,7 @@ public:
      * @param index a positive integer used to access an Oculus Rift device.
      * @param features a set of device features to enable.
      */
-    OVRWindow(const unsigned int& index, const std::initializer_list<OVRWindow::Feature>& features);
+    OVRWindow(const unsigned int index, const std::initializer_list<OVRWindow::Feature>& features);
     /**
      * @brief Instantiate an OVRWindow object that is attached to an Oculus Rift device.
      *
@@ -153,7 +153,7 @@ public:
      * @param feature the feature to enable or disable.
      * @param enable true to enable the feature, false to disable it.
      */
-    void enableFeature(const OVRWindow::Feature& feature, const bool enable = true);
+    void enableFeature(const OVRWindow::Feature feature, const bool enable = true);
     /**
      * Enable or disable a set of features.
      * @param features the features to enable or disable.
@@ -164,25 +164,25 @@ public:
      * Returns true if the specified feature is enabled, false otherwise.
      * @param feature the feature to query.
      */
-    bool isFeatureEnabled(const OVRWindow::Feature& feature) const;
+    bool isFeatureEnabled(const OVRWindow::Feature feature) const;
     /**
      * Returns true if the specified feature is supported by the device, false otherwise.
      * @param feature the feature to query.
      */
-    bool isFeatureSupported(const OVRWindow::Feature& feature) const;
+    bool isFeatureSupported(const OVRWindow::Feature feature) const;
     /**
      * Return the current vision mode.
      */
-    const OVRWindow::Vision& getVision() const;
+    OVRWindow::Vision getVision() const;
     /**
      * Set the vision.
      * @param vision the vision to set.
      */
-    void setVision(const OVRWindow::Vision& vision);
+    void setVision(const OVRWindow::Vision vision);
     /**
      * Return the current level of detail.
      */
-    const OVRWindow::LOD& getLOD() const;
+    OVRWindow::LOD getLOD() const;
     /**
      * Set the current level of detail (LOD). The LOD determines which features
      * are enabled or disabled with the goal of reducing frame render time,
@@ -190,7 +190,7 @@ public:
      * the LOD set by this member function will change.
      * @param lod the level of detail to set.
      */
-    void setLOD(const OVRWindow::LOD& lod);
+    void setLOD(const OVRWindow::LOD lod);
     /**
      * Enable or disable dynamic level of detail (LOD). Dynamic LOD adjusts the level
      * of detail to make sure the frame rate either matches, or is better than the
@@ -206,37 +206,37 @@ public:
      * Set the interpupillary distance (IPD) in millimeters.
      * @param ipd the distance to set.
      */
-    void setIPD(const float& ipd);
+    void setIPD(const float ipd);
     /**
      * TODO Explain me.
      */
-    void forceZeroIPD(const bool& force);
+    void forceZeroIPD(const bool force);
     /**
      * TODO Explain me.
      */
-    const float& getPixelDensity() const;
+    float getPixelDensity() const;
     /**
      * TODO Explain me.
      */
-    void setPixelDensity(const float& density);
+    void setPixelDensity(const float density);
     /**
      * Return the viewing frustum's near clipping plane distance.
      */
-    const float& getNearClippingDistance() const;
+    float getNearClippingDistance() const;
     /**
      * Set the viewing frustum's near clipping plane distance.
      * @param near the near clipping plane's distance.
      */
-    void setNearClippingDistance(const float& near);
+    void setNearClippingDistance(const float near);
     /**
      * Return the viewing frustum's far clipping plane distance.
      */
-    const float& getFarClippingDistance() const;
+    float getFarClippingDistance() const;
     /**
      * Set the viewing frustum's far clipping plane distance.
      * @param far the far clipping plane's distance.
      */
-    void setFarClippingDistance(const float& far);
+    void setFarClippingDistance(const float far);
     /**
      * Returns true if multisampling is enabled, false otherwise.
      */
@@ -254,14 +254,14 @@ protected:
     /**
      * @brief This virtual function is called whenever a new frame needs to be rendered.
      */
-    virtual void paintGL(const OVRWindow::FrameRenderContext& context, const float& dt);
+    virtual void paintGL(const OVRWindow::FrameRenderContext& context, const float dt);
     /**
      * @brief This virtual function is called whenever the window is resized.
      *
      * @param width the window's new width.
      * @param height the window's new height.
      */
-    virtual void resizeGL(const unsigned int& width, const unsigned int& height);
+    virtual void resizeGL(const unsigned int width, const unsigned int height);
     /**
      * Make the window's rendering context the current OpenGL context.
      */
@@ -275,7 +275,7 @@ protected:
      *
      * @param lod the new level of detail.
      */
-    virtual void changeLOD(const OVRWindow::LOD& lod);
+    virtual void changeLOD(const OVRWindow::LOD lod);
 private:
     /**
      * Updates the window.
@@ -301,7 +301,7 @@ private:
     /**
      * TODO Explain me.
      */
-    ovrGLTexture& getOvrGlTexture(const ovrEyeType& eye) const;
+    ovrGLTexture& getOvrGlTexture(const ovrEyeType eye) const;
     /**
      * Update an outdated render target configuration.
      */
@@ -318,7 +318,7 @@ private:
      * Adjust the LOD to make sure the frame rate matches the device's refresh rate.
      * @param dt the time since the last frame was rendered.
      */
-    void adjustLOD(const float& dt, const unsigned int& tolerance);
+    void adjustLOD(const float dt, const unsigned int tolerance);
     /**
      * @see QWindow::resizeEvent. This implementation of the resize event handler
      * is used to update OpenGL when the window is resized.
@@ -339,7 +339,7 @@ private:
      * @param eye the eye for which we wish to retrieve a frame render context.
      * @param pose the head pose.
      */
-    const OVRWindow::FrameRenderContext& getFrameRenderContext(const ovrEyeType& eye, const ovrPosef& pose);
+    const OVRWindow::FrameRenderContext& getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose);
     /**
      * The device structure contains information about the device and its capabilities.
      */
@@ -444,7 +444,7 @@ signals:
      * This signal is emitted when the interface's level of detail (LOD) has been changed.
      * @param currentLOD the interface's current level of detail.
      */
-    void LODChanged(const OVRWindow::LOD& currentLOD);
+    void LODChanged(const OVRWindow::LOD currentLOD);
 };
 
 #endif // OVRWINDOW_H
