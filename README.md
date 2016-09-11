@@ -2,7 +2,7 @@ OVRWindow
 =========
 
 OVRWindow is an Oculus SDK wrapper for Qt applications that uses the OpenGL API. The full
-documentation can be found [__here__](http://supranove.github.io/OVRWindow).
+documentation can be found [__here__](https://othieno.github.io/OVRWindow).
 
 
 Requirements
