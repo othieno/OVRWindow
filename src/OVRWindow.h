@@ -314,11 +314,6 @@ private:
      */
     void sanitizeRenderingConfiguration();
     /**
-     * Adjust the LOD to make sure the frame rate matches the device's refresh rate.
-     * @param dt the time since the last frame was rendered.
-     */
-    void adjustLOD(const float dt, const unsigned int tolerance);
-    /**
      * @see QWindow::resizeEvent. This implementation of the resize event handler
      * is used to update OpenGL when the window is resized.
      */
@@ -347,10 +342,6 @@ private:
      * Sets of enabled features.
      */
     QSet<OVRWindow::Feature> _enabledFeatures;
-    /**
-     * This flag is set to true when dynamic LOD is enabled, false otherwise.
-     */
-    bool _enableDynamicLOD;
     /**
      * The OpenGL context.
      */
@@ -426,10 +417,6 @@ public slots:
      * @brief Increase the interface's level of detail.
      */
     void increaseLOD();
-    /**
-     * @brief Toggle dynamic LOD.
-     */
-    void toggleDynamicLOD();
     /**
      * @brief Toggle multisampling.
      */

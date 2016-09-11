@@ -71,7 +71,6 @@ qHash(const OVRWindow::Feature feature) {
 OVRWindow::OVRWindow(const unsigned int index, const std::initializer_list<OVRWindow::Feature>& features) :
 QWindow(static_cast<QScreen*>(nullptr)),
 _device(),
-_enableDynamicLOD(false),
 _pendingUpdateRequest(false),
 _renderTarget({0, 0, 0, QSize(0, 0)}),
 _nearClippingPlaneDistance(0.01f),
@@ -329,12 +328,6 @@ OVRWindow::changeLOD(const OVRWindow::LOD lod) {
 
 
 void
-OVRWindow::enableDynamicLOD(const bool enable) {
-    _enableDynamicLOD = enable;
-}
-
-
-void
 OVRWindow::reduceLOD() {
     if (_LOD != OVRWindow::LOD::Lowest) {
         setLOD(static_cast<OVRWindow::LOD>(static_cast<std::underlying_type<OVRWindow::LOD>::type>(_LOD) - 1));
@@ -347,12 +340,6 @@ OVRWindow::increaseLOD() {
     if (_LOD != OVRWindow::LOD::Highest) {
         setLOD(static_cast<OVRWindow::LOD>(static_cast<std::underlying_type<OVRWindow::LOD>::type>(_LOD) + 1));
     }
-}
-
-
-void
-OVRWindow::toggleDynamicLOD() {
-    _enableDynamicLOD = !_enableDynamicLOD;
 }
 
 
@@ -503,8 +490,6 @@ OVRWindow::paintGL() {
     const auto& hmd = _device.Handle;
     const auto& frameTiming = ovrHmd_BeginFrame(hmd, 0);
     const auto& dt = frameTiming.DeltaSeconds;
-
-    adjustLOD(dt, 5);
 
     glBindFramebuffer(GL_FRAMEBUFFER, _renderTarget.fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -708,36 +693,6 @@ OVRWindow::sanitizeRenderingConfiguration() {
         }
         // Mark the rendering configuration as sanitized.
         _dirty.rendering = false;
-    }
-}
-
-
-void
-OVRWindow::adjustLOD(const float dt, const unsigned int tolerance) {
-    static const QMap<ovrHmdType, unsigned int> REFRESH_RATES = {
-        {ovrHmd_DK1, 60},
-        {ovrHmd_DK2, 75}
-    };
-    static const unsigned int TARGET_FPS = REFRESH_RATES[REFRESH_RATES.contains(_device.Type) ? _device.Type : ovrHmd_DK1];
-    static const unsigned int MAX_FPS_SAMPLES = 32;
-    static unsigned int NSAMPLES = 0;
-    static float ACCUMULATOR = 0;
-    static float FPS = 0;
-
-    ACCUMULATOR += 1.0f / dt;
-    ++NSAMPLES;
-
-    // Calculate average FPS.
-    if (NSAMPLES == MAX_FPS_SAMPLES) {
-        FPS = ACCUMULATOR / static_cast<float>(NSAMPLES);
-        if (_enableDynamicLOD && _LOD != OVRWindow::LOD::Lowest) {
-            const int dFPS = TARGET_FPS - static_cast<unsigned int>(std::round(FPS));
-            if (dFPS > static_cast<int>(tolerance)) {
-                reduceLOD();
-            }
-        }
-        NSAMPLES = 0;
-        ACCUMULATOR = 0;
     }
 }
 
