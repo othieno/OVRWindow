@@ -40,6 +40,22 @@
 #include <OVR_CAPI_GL.h>
 
 
+#if defined(Q_OS_LINUX)
+/**
+ * Returns the specified window's native X display.
+ */
+Display*
+getXDisplay(QWindow* const window) {
+    Display* display = nullptr;
+    QPlatformNativeInterface* const native = QGuiApplication::platformNativeInterface();
+    if (native != nullptr) {
+        display = static_cast<Display*>(native->nativeResourceForWindow("display", window));
+    }
+    return display;
+}
+#endif
+
+
 // This is a required function definition for QSet<OVRWindow::Feature> to be used.
 uint qHash(const OVRWindow::Feature& feature) {
     // Make sure OVRWindow::Feature's underlying type is an unsigned integer.
@@ -463,12 +479,9 @@ OVRWindow::configureGL() {
     OGL.Header.RTSize.h = _device.Resolution.h;
     OGL.Header.Multisample = 0;
 #if defined(Q_OS_LINUX)
-    auto* const display =
-    QGuiApplication::platformNativeInterface()->nativeResourceForWindow(QByteArray("display"), this);
-    assert(display != nullptr);
-
-    OGL.Disp = static_cast<::Display*>(display);
+    OGL.Disp = getXDisplay(this);
     OGL.Win = static_cast<::Window>(winId());
+    assert(OGL.Disp != nullptr);
 #elif defined(Q_OS_WIN32)
     __OVR_GL_CONFIG.Window = static_cast<::HWND>(winId());
 #endif
