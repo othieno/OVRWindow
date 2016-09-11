@@ -58,7 +58,6 @@ Hierarchy
 ---------
 
 The folders provided with this software are structured in the following manner:
-* __doc__ contains the OVRWindow API's documentation.
 * __sample__ contains a simple example on how to use OVRWindow.
 * __src__ contains the source code tree.
 * __tst__ contains unit tests.
