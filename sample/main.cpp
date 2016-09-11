@@ -29,7 +29,7 @@
 class SpinningCubeWindow : public OVRWindow {
 public:
     void initializeGL() override final;
-    void paintGL(const OVRWindow::FrameRenderContext&, const float) override final;
+    void paintGL(const ovrEyeType, const OVRWindow::RenderTransforms&, const float) override final;
 private:
     GLfloat _angle;
 };
@@ -78,16 +78,16 @@ SpinningCubeWindow::initializeGL() {
 
 
 void
-SpinningCubeWindow::paintGL(const OVRWindow::FrameRenderContext& context, const float dt) {
+SpinningCubeWindow::paintGL(const ovrEyeType, const OVRWindow::RenderTransforms& transforms, const float dt) {
     _angle = static_cast<GLfloat>(std::fmod(_angle + (dt * 5.0), 360.0));
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glMultMatrixf(context.projection.perspective.constData());
+    glMultMatrixf(transforms.perspective.constData());
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glMultMatrixf(context.view.constData());
+    glMultMatrixf(transforms.view.constData());
 
     // Move the triangle away from the screen and rotate it.
     glTranslatef(0.0f, 0.0f, -1.5f);

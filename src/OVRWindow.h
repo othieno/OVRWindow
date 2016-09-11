@@ -97,17 +97,15 @@ public:
         Highest
     };
     /**
-     * @struct FrameRenderContext
-     * @brief A frame's render context.
+     * @struct RenderTransforms
+     * @brief An object containing the view and projection transformation matrices.
      *
-     * TODO Explain me.
+     * The transformation matrices are generated based on an eye's point-of-view.
      */
-    struct FrameRenderContext {
+    struct RenderTransforms {
         QMatrix4x4 view;
-        struct {
-            QMatrix4x4 perspective;
-            QMatrix4x4 ortho;
-        } projection;
+        QMatrix4x4 perspective;
+        QMatrix4x4 ortho;
     };
     /**
      * @brief Instantiate an OVRWindow object that is attached to an Oculus Rift device.
@@ -252,9 +250,10 @@ protected:
      */
     virtual void initializeGL();
     /**
+     * TODO Explain me better.
      * @brief This virtual function is called whenever a new frame needs to be rendered.
      */
-    virtual void paintGL(const OVRWindow::FrameRenderContext& context, const float dt);
+    virtual void paintGL(const ovrEyeType eye, const OVRWindow::RenderTransforms& transforms, const float dt);
     /**
      * @brief This virtual function is called whenever the window is resized.
      *
@@ -335,11 +334,11 @@ private:
      */
     bool event(QEvent* const) override final;
     /**
-     * Return the frame render context for a given eye.
+     * Returns the transformation matrices for a given eye.
      * @param eye the eye for which we wish to retrieve a frame render context.
      * @param pose the head pose.
      */
-    const OVRWindow::FrameRenderContext& getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose);
+    const OVRWindow::RenderTransforms& getRenderTransforms(const ovrEyeType eye, const ovrPosef& pose);
     /**
      * The device structure contains information about the device and its capabilities.
      */
@@ -378,9 +377,9 @@ private:
      */
     ovrEyeRenderDesc _renderInfo[ovrEye_Count];
     /**
-     * The frame render context for each eye.
+     * The render context for each eye.
      */
-    OVRWindow::FrameRenderContext _frameRenderContext[ovrEye_Count];
+    OVRWindow::RenderTransforms _renderTransforms[ovrEye_Count];
     /**
      * The viewing frustum's near clipping plane distance.
      */

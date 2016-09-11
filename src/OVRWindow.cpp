@@ -148,7 +148,7 @@ OVRWindow::resizeGL(const unsigned int, const unsigned int) {}
 
 
 void
-OVRWindow::paintGL(const OVRWindow::FrameRenderContext&, const float) {}
+OVRWindow::paintGL(const ovrEyeType, const OVRWindow::RenderTransforms&, const float) {}
 
 
 bool
@@ -510,13 +510,13 @@ OVRWindow::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (const auto& eye : _device.EyeRenderOrder) {
-                auto& texConfig = getOvrGlTexture(eye);
+        auto& texConfig = getOvrGlTexture(eye);
         const auto& viewport = texConfig.OGL.Header.RenderViewport;
         const auto& pose = ovrHmd_BeginEyeRender(hmd, eye);
-        const auto& frameRenderContext = getFrameRenderContext(eye, pose);
+        const auto& renderTransforms = getRenderTransforms(eye, pose);
 
         glViewport(viewport.Pos.x, viewport.Pos.y, viewport.Size.w, viewport.Size.h);
-        paintGL(frameRenderContext, dt);
+        paintGL(eye, renderTransforms, dt);
         ovrHmd_EndEyeRender(hmd, eye, pose, &texConfig.Texture);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -788,9 +788,9 @@ OVRWindow::event(QEvent* const e)
 }
 
 
-const OVRWindow::FrameRenderContext&
-OVRWindow::getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose) {
-    auto& frameRenderContext = _frameRenderContext[eye];
+const OVRWindow::RenderTransforms&
+OVRWindow::getRenderTransforms(const ovrEyeType eye, const ovrPosef& pose) {
+    auto& transformations = _renderTransforms[eye];
     const auto& renderInfo = _renderInfo[eye];
     const auto& viewAdjust = renderInfo.ViewAdjust;
 
@@ -801,7 +801,7 @@ OVRWindow::getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose) {
     );
     const auto* V = &viewMatrix.M[0][0];
     for (unsigned int i = 0; i < 4; ++i) {
-        auto& view = frameRenderContext.view;
+        auto& view = transformations.view;
         view(i, 0) = *V++;
         view(i, 1) = *V++;
         view(i, 2) = *V++;
@@ -825,13 +825,13 @@ OVRWindow::getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose) {
         const auto* P = &perspective.M[0][0];
         const auto* O = &ortho.M[0][0];
         for (unsigned int i = 0; i < 4; ++i) {
-            auto& perspective = frameRenderContext.projection.perspective;
+            auto& perspective = transformations.perspective;
             perspective(i, 0) = *P++;
             perspective(i, 1) = *P++;
             perspective(i, 2) = *P++;
             perspective(i, 3) = *P++;
 
-            auto& ortho = frameRenderContext.projection.ortho;
+            auto& ortho = transformations.ortho;
             ortho(i, 0) = *O++;
             ortho(i, 1) = *O++;
             ortho(i, 2) = *O++;
@@ -839,5 +839,5 @@ OVRWindow::getFrameRenderContext(const ovrEyeType eye, const ovrPosef& pose) {
         }
         dirtyProjection = false;
     }
-    return frameRenderContext;
+    return transformations;
 }
