@@ -23,6 +23,7 @@
  */
 #include <OVRWindow.h>
 #include <QGuiApplication>
+#include <cmath>
 
 
 class SpinningCubeWindow : public OVRWindow {
@@ -78,7 +79,7 @@ SpinningCubeWindow::initializeGL() {
 
 void
 SpinningCubeWindow::paintGL(const OVRWindow::FrameRenderContext& context, const float& dt) {
-    _angle = static_cast<GLfloat>(fmod(_angle + (dt * 5.0), 360.0));
+    _angle = static_cast<GLfloat>(std::fmod(_angle + (dt * 5.0), 360.0));
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
