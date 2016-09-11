@@ -23,5 +23,5 @@ LIBS += -lovr
 unix:!macx {
    eval(QMAKE_HOST.arch = x86_64): LIBS += -L$$LIBOVR/Lib/Linux/Release/x86_64
    else:                           LIBS += -L$$LIBOVR/Lib/Linux/Release/i386
-	                                LIBS += -lX11 -lXinerama -lXrandr -ludev
+                                   LIBS += -lX11 -lXinerama -lXrandr -ludev
 }
