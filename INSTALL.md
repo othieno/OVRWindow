@@ -21,7 +21,7 @@ sudo apt-get install qtbase5-private-dev
 
 OVRWindow depends on the C API introduced in Oculus SDK 0.3 and later. It is currently developed against [Oculus SDK v0.3.2-preview][ovrsdk] on Linux.
 
-OVRWindow will need to know where to find your Oculus SDK installation. It will look for the __OVRSDK__ environment variable which should contain the location of your SDK installation.
+OVRWindow will need to know where to find your Oculus SDK installation. It will look for the __OVRSDK__<sup>1</sup> environment variable which should contain the location of your SDK installation.
 
 If you are building your project from the command line, the variable can be exported by running
 ```bash
@@ -29,10 +29,14 @@ export OVRSDK=<path/to/oculus/sdk>
 ```
 where `<path/to/oculus/sdk>` is the location of your SDK installation.
 
-On the other hand, if you are building a project from Qt Creator, the variable can be added to the current build configuration's *Build Environment* found under [Projects] > [Build & Run]. Remember that each build configuration has its own build environment so if you do change the build configuration, you will have to update the build environment again.
+On the other hand, if you are building a project from Qt Creator, the variable can be added to the current build configuration's *Build Environment* found under [Projects] > [Build & Run]. Remember that each build configuration has its own build environment so if you do change the build configuration, you may have to update its build environment.
 
+<br>
+<br>
+
+1.
 If the name __OVRSDK__ conflicts with your current environment, line #4 of __ovrwindow.pri__ can be changed from `OVRSDK = $$(OVRSDK)` to `OVRSDK = $$(<CUSTOM_PATH_TO_OVR_SDK>)` where `<CUSTOM_PATH_TO_OVR_SDK>`
-is either an environment variable that contains the path to a valid installation of the Oculus SDK, or an absolute path to the SDK.
+is either an environment variable that contains the absolute path to a valid installation of the Oculus SDK, or the path itself.
 
 
 
