@@ -1,5 +1,5 @@
 # Ignore prototypes and auto-generated files.
-*.pro.user
+*.pro.user*
 prototype
 Makefile
 build
