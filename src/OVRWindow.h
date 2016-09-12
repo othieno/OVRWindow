@@ -190,13 +190,6 @@ public:
      */
     void setLOD(const OVRWindow::LOD lod);
     /**
-     * Enable or disable dynamic level of detail (LOD). Dynamic LOD adjusts the level
-     * of detail to make sure the frame rate either matches, or is better than the
-     * device's refresh rate.
-     * @param enable true to enable dynamic LOD, false to disable.
-     */
-    void enableDynamicLOD(const bool enable = true);
-    /**
      * Return the current interpupillary distance (IPD) in millimeters.
      */
     float getIPD() const;
